@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { DelphiMarket, ExternalOddsMatch, MarketForecast } from "./types";
+import { circuitBreaker } from "./circuitBreaker";
 
 /**
  * Superforecaster AI Engine
@@ -102,22 +103,29 @@ Return ONLY a valid JSON object matching this schema:
     const candidateModels = ["gemini-3.6-flash", "gemini-2.5-pro", "gemini-1.5-pro", "gemini-1.5-flash"];
     let text: string | null = null;
 
-    for (const modelName of candidateModels) {
-      try {
-        const response = await this.ai.models.generateContent({
-          model: modelName,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json"
+    try {
+      text = await circuitBreaker.executeWithBackoff(async () => {
+        for (const modelName of candidateModels) {
+          try {
+            const response = await this.ai!.models.generateContent({
+              model: modelName,
+              contents: prompt,
+              config: {
+                responseMimeType: "application/json"
+              }
+            });
+            if (response && response.text) {
+              return response.text;
+            }
+          } catch (e) {
+            // Try next candidate model
           }
-        });
-        if (response && response.text) {
-          text = response.text;
-          break;
         }
-      } catch (e) {
-        // Try next candidate model
-      }
+        throw new Error("All Gemini candidate models unavailable.");
+      }, 3, 2000);
+    } catch (err: any) {
+      console.warn(`[Superforecaster] LLM backoff exhausted: ${err.message}. Falling back to Heuristic model.`);
+      return null;
     }
 
     if (!text) return null;

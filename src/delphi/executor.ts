@@ -1,5 +1,6 @@
 import { TradeOpportunity, PositionRecord, BotConfig, BotLogEntry } from "./types";
 import { riskKellyEngine } from "./riskKellyEngine";
+import { circuitBreaker } from "./circuitBreaker";
 
 /**
  * Trade Executor & Position Manager
@@ -82,6 +83,18 @@ export class TradeExecutor {
       return { success: false, log };
     }
 
+    // Check circuit breaker status
+    const safeMode = circuitBreaker.isSafeMode();
+    if (safeMode.active) {
+      const log: BotLogEntry = {
+        id: Math.random().toString(36).substring(7),
+        timestamp: new Date().toISOString(),
+        level: "WARN",
+        message: `🛡️ [CIRCUIT BREAKER ACTIVE] Trade skipped on "${opp.question.slice(0, 30)}...": ${safeMode.reason}`
+      };
+      return { success: false, log };
+    }
+
     // Execute Live on Delphi Testnet via SDK
     if (this.delphiClient && !config.dryRun) {
       try {
@@ -91,6 +104,8 @@ export class TradeExecutor {
           amountTokens: opp.recommendedAmount,
           maxSlippage: opp.estimatedSlippage * 1.5,
         });
+
+        circuitBreaker.recordTxSuccess(opp.marketId);
 
         const sharesBought = tx.sharesBought || (opp.recommendedAmount / opp.currentPrice);
         const avgPrice = tx.avgPrice || (opp.recommendedAmount / sharesBought);
@@ -129,6 +144,7 @@ export class TradeExecutor {
 
         return { success: true, log, position };
       } catch (err) {
+        circuitBreaker.recordTxFailure(opp.marketId, (err as any).message);
         const log: BotLogEntry = {
           id: Math.random().toString(36).substring(7),
           timestamp: new Date().toISOString(),
