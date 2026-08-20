@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import { delphiBotRunner } from "./src/delphi/botRunner";
 import { tradeExecutor } from "./src/delphi/executor";
+import { selfHealing } from "./src/delphi/selfHealing";
 
 dotenv.config();
 
@@ -381,6 +382,23 @@ Output strictly valid JSON only.`;
     try {
       delphiBotRunner.updateConfig(req.body.config || {});
       res.json({ success: true, config: delphiBotRunner.getConfig() });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.get("/api/delphi/health", (_req, res) => {
+    try {
+      res.json(selfHealing.getHealthReport());
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post("/api/delphi/heal", (_req, res) => {
+    try {
+      selfHealing.rotateRPC();
+      res.json({ success: true, report: selfHealing.getHealthReport() });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
     }

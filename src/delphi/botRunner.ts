@@ -6,6 +6,7 @@ import { SuperforecasterEngine } from "./superforecaster";
 import { riskKellyEngine } from "./riskKellyEngine";
 import { tradeExecutor } from "./executor";
 import { autoRedeemer } from "./autoRedeemer";
+import { selfHealing } from "./selfHealing";
 
 export class DelphiBotRunner {
   private config: BotConfig;
@@ -170,33 +171,52 @@ export class DelphiBotRunner {
         }
       }
 
-      // 4. Superforecast & Analyze Opportunities
+      // 4. Superforecast & Analyze Opportunities with Self-Healing
       this.state.status = "ANALYZING";
       this.notify();
       const allOpportunities: TradeOpportunity[] = [];
 
       for (const market of activeMarkets) {
-        // Fetch Polymarket / Web Odds
-        const externalOdds = await oddsAggregator.getExternalOdds(market);
-        
-        // AI Superforecasting
-        const forecast = await this.forecaster.forecastMarket(market, externalOdds);
-        this.currentForecasts.set(market.id, forecast);
+        try {
+          // Fetch Polymarket / Web Odds
+          const externalOdds = await oddsAggregator.getExternalOdds(market);
+          
+          // AI Superforecasting
+          let forecast = await this.forecaster.forecastMarket(market, externalOdds);
+          
+          // Self-Healing auto-correction for probabilities
+          forecast.estimatedProbabilities = selfHealing.sanitizeProbabilities(
+            forecast.estimatedProbabilities,
+            market.outcomes
+          );
+          this.currentForecasts.set(market.id, forecast);
 
-        // Quantitative Kelly & LMSR Slippage Evaluation
-        const availableBankroll = tradeExecutor.getBankroll();
-        const opps = riskKellyEngine.evaluateMarket(market, forecast, this.config, availableBankroll);
+          // Quantitative Kelly & LMSR Slippage Evaluation
+          const availableBankroll = tradeExecutor.getBankroll();
+          const opps = riskKellyEngine.evaluateMarket(market, forecast, this.config, availableBankroll);
 
-        for (const opp of opps) {
-          allOpportunities.push(opp);
-          this.addLog("ALPHA", `⚡ Alpha Found: "${opp.outcomeName}" in "${opp.question.slice(0, 35)}..." | Edge: +${(opp.edge * 100).toFixed(1)}% | Fair: ${(opp.fairProbability * 100).toFixed(1)}% vs Delphi: ${(opp.currentPrice * 100).toFixed(1)}%`);
+          for (const opp of opps) {
+            // Auto-heal bet amount
+            opp.recommendedAmount = selfHealing.sanitizeTradeAmount(
+              opp.recommendedAmount,
+              availableBankroll,
+              this.config.maxSingleBetPct
+            );
+
+            if (opp.recommendedAmount > 0) {
+              allOpportunities.push(opp);
+              this.addLog("ALPHA", `⚡ Alpha Found: "${opp.outcomeName}" in "${opp.question.slice(0, 35)}..." | Edge: +${(opp.edge * 100).toFixed(1)}% | Fair: ${(opp.fairProbability * 100).toFixed(1)}% vs Delphi: ${(opp.currentPrice * 100).toFixed(1)}%`);
+            }
+          }
+        } catch (err: any) {
+          selfHealing.healError(`Market Analysis on "${market.question.slice(0, 25)}"`, err.message);
         }
       }
 
       // Sort opportunities by highest priority score
       this.currentOpportunities = allOpportunities.sort((a, b) => b.priorityScore - a.priorityScore);
 
-      // 5. Execute Trades
+      // 5. Execute Trades with Revert Protection
       if (this.currentOpportunities.length > 0) {
         this.state.status = "EXECUTING";
         this.notify();
@@ -205,8 +225,12 @@ export class DelphiBotRunner {
         const tradesToExecute = this.currentOpportunities.slice(0, 3);
 
         for (const opp of tradesToExecute) {
-          const result = await tradeExecutor.executeOpportunity(opp, this.config);
-          this.addLog(result.log.level, result.log.message, result.log.details);
+          try {
+            const result = await tradeExecutor.executeOpportunity(opp, this.config);
+            this.addLog(result.log.level, result.log.message, result.log.details);
+          } catch (err: any) {
+            selfHealing.healError(`Trade Execution on "${opp.outcomeName}"`, err.message);
+          }
         }
       } else {
         this.addLog("INFO", "No high-edge trades meeting minimum criteria this cycle. Capital preserved.");
@@ -214,9 +238,10 @@ export class DelphiBotRunner {
 
       this.state.status = this.isRunning ? "WAITING" : "IDLE";
       this.notify();
-    } catch (err) {
+    } catch (err: any) {
+      selfHealing.healError("Global Bot Cycle", err.message);
       this.state.status = "IDLE";
-      this.addLog("ERROR", `Cycle error: ${(err as any).message}`);
+      this.addLog("WARN", `Cycle auto-recovered: ${err.message}`);
     }
   }
 }
