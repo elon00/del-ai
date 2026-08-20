@@ -1,0 +1,8 @@
+{
+  "name": "Del AI",
+  "description": "Conway ai automaton, ai agentics chatbot, pqc",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
