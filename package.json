@@ -31,7 +31,9 @@
     "motion": "^12.23.24",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
-    "vite": "^6.2.3"
+    "vite": "^6.2.3",
+    "@noble/hashes": "^1.8.0",
+    "@noble/post-quantum": "^0.7.1"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
