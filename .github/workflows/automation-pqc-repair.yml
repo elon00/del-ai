@@ -1,0 +1,35 @@
+name: Automation PQC Repair Verification
+on:
+  push:
+    branches: [automation/fix-pqc-lock-20260923]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Synchronize lockfile
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Clean install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Project-native finish gate
+        run: npm run qmoosa:finish
+      - name: Production dependency security audit
+        run: npm audit --omit=dev --audit-level=high
+      - name: Commit deterministic lockfile only after gates pass
+        run: |
+          if ! git diff --quiet -- package-lock.json; then
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add package-lock.json
+            git commit -m "fix: synchronize PQC dependency lock"
+            git push
+          fi
+      - name: Final reproducibility verification
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          git diff --exit-code -- package.json package-lock.json
