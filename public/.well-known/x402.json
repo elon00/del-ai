@@ -1,0 +1,48 @@
+{
+  "x402Version": "1.0.0",
+  "version": "1.0.0",
+  "name": "Del AI — Conway AI Automaton & PQC Agentics",
+  "type": "ai-automaton-platform",
+  "category": "ai-agent-commerce",
+  "tags": [
+    "solana",
+    "conway-automaton",
+    "post-quantum",
+    "ai-agentics",
+    "gemini",
+    "x402"
+  ],
+  "provider": {
+    "name": "Del AI / Martin",
+    "website": "https://github.com/elon00/del-ai",
+    "payTo": "8qhW8ctXX77UNLTY9kx3XoAoH8kstQXPbCghUwqu34es",
+    "network": "solana-testnet",
+    "caip2": "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z"
+  },
+  "endpoints": [
+    {
+      "path": "/api/v1/x402/agent/chat",
+      "method": "POST",
+      "description": "Autonomous AI Agentics Chat & Quantum-Resistant intelligence query via Gemini neural model",
+      "pricing": {
+        "amountSol": 0.001,
+        "lamports": 1000000,
+        "currency": "SOL",
+        "alternativeUsdc": "0.01"
+      },
+      "challengeHeader": "WWW-Authenticate: x402 realm=\"del-ai\", payTo=\"8qhW8ctXX77UNLTY9kx3XoAoH8kstQXPbCghUwqu34es\", amount=\"0.001\", currency=\"SOL\", network=\"solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z\""
+    },
+    {
+      "path": "/api/v1/x402/conway/step",
+      "method": "POST",
+      "description": "Deterministic Conway cellular automaton step evolution with polynomial entropy derivation",
+      "pricing": {
+        "amountSol": 0.001,
+        "lamports": 1000000,
+        "currency": "SOL",
+        "alternativeUsdc": "0.01"
+      },
+      "challengeHeader": "WWW-Authenticate: x402 realm=\"del-ai\", payTo=\"8qhW8ctXX77UNLTY9kx3XoAoH8kstQXPbCghUwqu34es\", amount=\"0.001\", currency=\"SOL\", network=\"solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z\""
+    }
+  ]
+}
