@@ -1,0 +1,173 @@
+{
+  "engine": "REA_Reverse_Engineer_Anything",
+  "status": "STRUCTURE_RECONSTRUCTED",
+  "analyzed_files": 55,
+  "manifest": {
+    "agent_avatar.jpg": {
+      "bytes": 179958
+    },
+    "bun.lock": {
+      "bytes": 73883
+    },
+    "index.html": {
+      "bytes": 688
+    },
+    "metadata.json": {
+      "bytes": 204
+    },
+    "package-lock.json": {
+      "bytes": 214006
+    },
+    "package.json": {
+      "bytes": 1758
+    },
+    "README.md": {
+      "bytes": 6365
+    },
+    "REALITY_MANIFEST.json": {
+      "bytes": 1652
+    },
+    "server.ts": {
+      "bytes": 22681
+    },
+    "tsconfig.json": {
+      "bytes": 534
+    },
+    "URS_EVIDENCE_CERTIFICATE.json": {
+      "bytes": 11734
+    },
+    "vite.config.ts": {
+      "bytes": 730
+    },
+    "scripts\\audit-crypto.mjs": {
+      "bytes": 7196
+    },
+    "scripts\\generate-urs-certificate.ts": {
+      "bytes": 4648
+    },
+    "scripts\\reality-universal.ts": {
+      "bytes": 16328
+    },
+    "scripts\\rea_inspector.py": {
+      "bytes": 1485
+    },
+    "scripts\\rsi_engine.py": {
+      "bytes": 2039
+    },
+    "scripts\\run_workflow.ts": {
+      "bytes": 3631
+    },
+    "src\\App.tsx": {
+      "bytes": 39754
+    },
+    "src\\index.css": {
+      "bytes": 24
+    },
+    "src\\main.tsx": {
+      "bytes": 241
+    },
+    "src\\types.ts": {
+      "bytes": 3463
+    },
+    "tests\\nist-pqc.test.mjs": {
+      "bytes": 4368
+    },
+    "tests\\reality_check_harness.py": {
+      "bytes": 1250
+    },
+    ".github\\workflows\\automation-pqc-repair.yml": {
+      "bytes": 1319
+    },
+    ".github\\workflows\\npm-publish-github-packages.yml": {
+      "bytes": 932
+    },
+    ".github\\workflows\\qmoosa-rsi-rea-sync.yml": {
+      "bytes": 531
+    },
+    "src\\components\\Header.tsx": {
+      "bytes": 6204
+    },
+    "src\\delphi\\autoRedeemer.ts": {
+      "bytes": 4763
+    },
+    "src\\delphi\\botRunner.ts": {
+      "bytes": 9065
+    },
+    "src\\delphi\\circuitBreaker.ts": {
+      "bytes": 3645
+    },
+    "src\\delphi\\cli.ts": {
+      "bytes": 1467
+    },
+    "src\\delphi\\config.ts": {
+      "bytes": 1363
+    },
+    "src\\delphi\\executor.ts": {
+      "bytes": 8555
+    },
+    "src\\delphi\\marketScanner.ts": {
+      "bytes": 7812
+    },
+    "src\\delphi\\oddsAggregator.ts": {
+      "bytes": 3433
+    },
+    "src\\delphi\\riskKellyEngine.ts": {
+      "bytes": 4777
+    },
+    "src\\delphi\\selfHealing.ts": {
+      "bytes": 7036
+    },
+    "src\\delphi\\superforecaster.ts": {
+      "bytes": 8579
+    },
+    "src\\delphi\\types.ts": {
+      "bytes": 3657
+    },
+    "src\\lib\\conwayPresets.ts": {
+      "bytes": 4139
+    },
+    "src\\lib\\pqcMath.ts": {
+      "bytes": 13848
+    },
+    "src\\utils\\pqcCrypto.ts": {
+      "bytes": 7779
+    },
+    "src\\components\\agent\\AgentChat.tsx": {
+      "bytes": 16430
+    },
+    "src\\components\\automaton\\AIPatternSynthesizer.tsx": {
+      "bytes": 9526
+    },
+    "src\\components\\automaton\\AutomatonControls.tsx": {
+      "bytes": 10637
+    },
+    "src\\components\\automaton\\AutomatonStats.tsx": {
+      "bytes": 5873
+    },
+    "src\\components\\automaton\\ConwayCanvas.tsx": {
+      "bytes": 14782
+    },
+    "src\\components\\pqc\\DilithiumSimulator.tsx": {
+      "bytes": 11076
+    },
+    "src\\components\\pqc\\EntropyBridge.tsx": {
+      "bytes": 8594
+    },
+    "src\\components\\pqc\\HybridEncryptionSandbox.tsx": {
+      "bytes": 13572
+    },
+    "src\\components\\pqc\\KyberSimulator.tsx": {
+      "bytes": 16451
+    },
+    "src\\components\\pqc\\LatticeVisualizer.tsx": {
+      "bytes": 12529
+    },
+    "src\\components\\pqc\\PQCWorkbench.tsx": {
+      "bytes": 3673
+    },
+    "src\\components\\pqc\\QuantumSecurityMatrix.tsx": {
+      "bytes": 12630
+    }
+  },
+  "timestamp": 1793993979
+}
