@@ -1,7 +1,7 @@
 {
   "engine": "REA_Reverse_Engineer_Anything",
   "status": "STRUCTURE_RECONSTRUCTED",
-  "analyzed_files": 55,
+  "analyzed_files": 57,
   "manifest": {
     "agent_avatar.jpg": {
       "bytes": 179958
@@ -38,6 +38,12 @@
     },
     "vite.config.ts": {
       "bytes": 730
+    },
+    "reports\\RAVEN_RSI_DIAGNOSTIC.json": {
+      "bytes": 341
+    },
+    "reports\\REA_ANALYSIS.json": {
+      "bytes": 3893
     },
     "scripts\\audit-crypto.mjs": {
       "bytes": 7196
@@ -169,5 +175,5 @@
       "bytes": 12630
     }
   },
-  "timestamp": 1793993979
+  "timestamp": 1794222183
 }
